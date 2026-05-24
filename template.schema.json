@@ -1,0 +1,461 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://basalt.host/schemas/template.schema.json",
+  "title": "Template",
+  "description": "A Basalt Template",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "game": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "author": {
+      "type": "string",
+      "minLength": 3
+    },
+    "logo": {
+      "type": "string",
+      "format": "uri"
+    },
+    "settings": {
+      "$ref": "#/$defs/settings"
+    },
+    "docker": {
+      "$ref": "#/$defs/docker"
+    },
+    "backups": {
+      "$ref": "#/$defs/backups"
+    }
+  },
+  "required": [
+    "id",
+    "game",
+    "name",
+    "description",
+    "version",
+    "author",
+    "settings",
+    "docker",
+    "logo"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "settings": {
+      "title": "Settings",
+      "description": "Template settings",
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "fileBrowser": {
+          "type": "object",
+          "properties": {
+            "rootFolder": {
+              "type": "string"
+            },
+            "readOnlyPaths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "hiddenPaths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/category"
+          },
+          "minItems": 1
+        },
+        "playit": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "protocol": {
+              "type": "string",
+              "enum": [
+                "tcp",
+                "udp",
+                "both"
+              ]
+            },
+            "port": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "versions",
+        "categories"
+      ],
+      "additionalProperties": false
+    },
+    "docker": {
+      "title": "Docker",
+      "description": "Docker settings",
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string"
+        },
+        "startupCommand": {
+          "type": "string",
+          "description": "Shell command run instead of the image CMD. Supports {{ENV_KEY}} placeholders resolved against the merged environment. Instances may override it."
+        },
+        "environment": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "key"
+            ]
+          }
+        }
+      },
+      "required": [
+        "image"
+      ],
+      "additionalProperties": false
+    },
+    "backups": {
+      "title": "Backups",
+      "description": "Template backup settings",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/backupTarget"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "enabled",
+        "targets"
+      ],
+      "additionalProperties": false
+    },
+    "backupTarget": {
+      "title": "Backup Target",
+      "description": "A container path that can be archived for backups.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "containerPath": {
+          "type": "string",
+          "pattern": "^/"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "containerPath"
+      ],
+      "additionalProperties": false
+    },
+    "category": {
+      "title": "Category",
+      "description": "A Template Category",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/category"
+              },
+              {
+                "$ref": "#/$defs/field"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "description",
+        "children"
+      ],
+      "additionalProperties": false
+    },
+    "field": {
+      "title": "Field",
+      "description": "A Template Field",
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "defaultValue": {},
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "expand": {
+          "$ref": "#/$defs/expand"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "TEXT",
+            "NUMBER",
+            "BOOLEAN",
+            "STRING",
+            "PASSWORD",
+            "SELECT",
+            "COMBOBOX",
+            "LIST",
+            "SLIDER",
+            "TEXTAREA",
+            "READ_ONLY",
+            "TIMEZONE",
+            "DATETIME",
+            "DATE",
+            "MEM"
+          ]
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "$ref": "#/$defs/scalarValue"
+              },
+              "label": {
+                "type": "string"
+              },
+              "expand": {
+                "$ref": "#/$defs/expand"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "value",
+              "label"
+            ]
+          }
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "step": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "unit": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "enable": {
+          "$ref": "#/$defs/condition"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "label",
+        "description",
+        "kind"
+      ]
+    },
+    "expand": {
+      "type": "object",
+      "properties": {
+        "when": {
+          "$ref": "#/$defs/condition"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/category"
+              },
+              {
+                "$ref": "#/$defs/field"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "children"
+      ],
+      "additionalProperties": false
+    },
+    "condition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "equals": {
+              "$ref": "#/$defs/scalarValue"
+            }
+          },
+          "required": [
+            "equals"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "notEquals": {
+              "$ref": "#/$defs/scalarValue"
+            }
+          },
+          "required": [
+            "notEquals"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "in": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/scalarValue"
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "in"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "notIn": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/scalarValue"
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "notIn"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "nonEmpty": {
+              "const": true
+            }
+          },
+          "required": [
+            "nonEmpty"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "isEmpty": {
+              "type": "string",
+              "pattern": "^\\$[^\\s]+$"
+            }
+          },
+          "required": [
+            "isEmpty"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "scalarValue": {
+      "type": [
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    }
+  }
+}

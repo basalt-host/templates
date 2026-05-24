@@ -1,0 +1,748 @@
+{
+  "id": "2553ea2e-af27-4f5c-a217-34481f3f3dea",
+  "game": "Hytale",
+  "name": "hybrowse/hytale-server",
+  "description": "Official Basalt Hytale server template, powered by the Hybrowse production Docker image with auto-download, CurseForge mod management, and backups.",
+  "version": "2026.7.11",
+  "author": "Basalt Team",
+  "logo": "https://raw.githubusercontent.com/basalt-host/templates/refs/heads/main/assets/hytale.png",
+  "settings": {
+    "versions": ["LATEST"],
+    "fileBrowser": {
+      "rootFolder": "/data",
+      "readOnlyPaths": [],
+      "hiddenPaths": [
+        "/data/.hytale-downloader-credentials.json",
+        "/data/.hytale-downloader",
+        "/data/.machine-id",
+        "/data/.hytale-curseforge-mods-lock",
+        "/data/.hytale-curseforge-mods",
+        "/data/.hytale-prestart-downloads",
+        "/data/.hytale-version"
+      ]
+    },
+    "categories": [
+      {
+        "id": "general",
+        "label": "General",
+        "description": "Core provisioning settings for the Hytale server.",
+        "children": [
+          {
+            "key": "HYTALE_AUTO_DOWNLOAD",
+            "defaultValue": true,
+            "label": "Auto-Download Server Files",
+            "description": "Automatically download Assets.zip and the Hytale server files via the official Hytale Downloader when they are missing. On first start this requires a one-time interactive device-code authentication, watch the server logs for a URL and code.",
+            "kind": "BOOLEAN",
+            "expand": {
+              "when": {
+                "equals": true
+              },
+              "children": [
+                {
+                  "key": "HYTALE_AUTO_UPDATE",
+                  "defaultValue": true,
+                  "label": "Auto-Update Server Files",
+                  "description": "Check for server updates on every start by comparing the remote version against the locally installed version. Downloads only happen when an update is available.",
+                  "kind": "BOOLEAN"
+                },
+                {
+                  "key": "HYTALE_DOWNLOADER_PATCHLINE",
+                  "defaultValue": null,
+                  "label": "Downloader Patchline",
+                  "placeholder": "pre-release",
+                  "description": "Optional downloader patchline, for example to opt into a pre-release channel. Leave empty for the default patchline.",
+                  "kind": "TEXT",
+                  "required": false
+                },
+                {
+                  "key": "HYTALE_DOWNLOADER_SKIP_UPDATE_CHECK",
+                  "defaultValue": false,
+                  "label": "Skip Downloader Update Check",
+                  "description": "Passes -skip-update-check to the downloader to reduce network calls/variability during automation.",
+                  "kind": "BOOLEAN"
+                }
+              ]
+            }
+          },
+          {
+            "key": "TZ",
+            "defaultValue": null,
+            "label": "Time Zone",
+            "placeholder": "UTC",
+            "description": "The time zone to use for the server.",
+            "kind": "TIMEZONE"
+          }
+        ]
+      },
+      {
+        "id": "server",
+        "label": "Server",
+        "description": "Convenience overrides applied to the server's config.json on every startup.",
+        "children": [
+          {
+            "key": "HYTALE_CONFIG_SERVER_NAME",
+            "defaultValue": "Basalt Hytale Server",
+            "label": "Server Name",
+            "placeholder": "Basalt Hytale Server",
+            "description": "Sets ServerName in config.json.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_CONFIG_MOTD",
+            "defaultValue": "Basalt Powered Hytale Server",
+            "label": "MOTD",
+            "placeholder": "Basalt Powered Hytale Server",
+            "description": "Sets MOTD in config.json, displayed in the server list.",
+            "kind": "TEXTAREA",
+            "required": false
+          },
+          {
+            "key": "HYTALE_CONFIG_PASSWORD",
+            "defaultValue": null,
+            "label": "Server Password",
+            "description": "Sets Password in config.json. Leave empty for no password.",
+            "kind": "PASSWORD",
+            "required": false
+          },
+          {
+            "key": "HYTALE_CONFIG_MAX_PLAYERS",
+            "defaultValue": 20,
+            "label": "Max Players",
+            "description": "Sets MaxPlayers in config.json.",
+            "kind": "SLIDER",
+            "min": 1,
+            "max": 200
+          },
+          {
+            "key": "HYTALE_CONFIG_MAX_VIEW_RADIUS",
+            "defaultValue": null,
+            "label": "Max View Radius",
+            "description": "Sets MaxViewRadius (chunks) in config.json.",
+            "kind": "NUMBER",
+            "required": false
+          },
+          {
+            "key": "HYTALE_CONFIG_DEFAULT_WORLD",
+            "defaultValue": null,
+            "label": "Default World",
+            "description": "Sets Defaults.World in config.json.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_CONFIG_DEFAULT_GAME_MODE",
+            "defaultValue": null,
+            "label": "Default Game Mode",
+            "description": "Sets Defaults.GameMode in config.json.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_ALLOW_OP",
+            "defaultValue": false,
+            "label": "Allow Operator Command",
+            "description": "If enabled, allows the /op self command on the server.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_SINGLEPLAYER",
+            "defaultValue": false,
+            "label": "Singleplayer Mode",
+            "description": "Starts the server in singleplayer mode.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_BARE",
+            "defaultValue": false,
+            "label": "Bare Mode",
+            "description": "Starts the server with a bare/minimal configuration.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_CONFIG_PATCH_JSON",
+            "defaultValue": null,
+            "label": "Advanced Config Patch (JSON)",
+            "placeholder": "{\"Defaults\":{\"World\":\"creative-island\"}}",
+            "description": "A JSON object merged recursively into config.json on every startup. Existing keys not mentioned are preserved. Invalid JSON fails startup.",
+            "kind": "TEXTAREA",
+            "required": false
+          }
+        ]
+      },
+      {
+        "id": "networking",
+        "label": "Networking",
+        "description": "Hytale uses QUIC over UDP, not TCP. Make sure port 5520/udp is published.",
+        "children": [
+          {
+            "key": "HYTALE_BIND",
+            "defaultValue": "0.0.0.0:5520",
+            "label": "Bind Address",
+            "placeholder": "0.0.0.0:5520",
+            "description": "Bind address for the QUIC/UDP listener.",
+            "kind": "TEXT"
+          },
+          {
+            "key": "HYTALE_AUTH_MODE",
+            "defaultValue": "authenticated",
+            "label": "Authentication Mode",
+            "description": "Controls how players authenticate with the server.",
+            "kind": "SELECT",
+            "options": [
+              {
+                "value": "authenticated",
+                "label": "Authenticated"
+              },
+              {
+                "value": "offline",
+                "label": "Offline"
+              },
+              {
+                "value": "insecure",
+                "label": "Insecure"
+              }
+            ]
+          },
+          {
+            "key": "HYTALE_FORCE_NETWORK_FLUSH",
+            "defaultValue": true,
+            "label": "Force Network Flush",
+            "description": "Forces network buffers to be flushed more aggressively, trading a little throughput for lower latency.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_TRANSPORT",
+            "defaultValue": null,
+            "label": "Transport Override",
+            "description": "Advanced: overrides the network transport implementation used by the server.",
+            "kind": "TEXT",
+            "required": false
+          }
+        ]
+      },
+      {
+        "id": "mods",
+        "label": "CurseForge Mods",
+        "description": "Automatic mod download and updates from CurseForge. Requires a CurseForge API key from console.curseforge.com (keys start with $2a$10$).",
+        "children": [
+          {
+            "key": "HYTALE_CURSEFORGE_MODS",
+            "defaultValue": null,
+            "label": "CurseForge Mods",
+            "placeholder": "123456",
+            "description": "A list of CurseForge mod references. Use a project ID (123456) for the latest file, projectId:fileId (123456:3456789) to pin a specific file, or projectId@keyword to match a file by name.",
+            "kind": "LIST",
+            "expand": {
+              "when": {
+                "nonEmpty": true
+              },
+              "children": [
+                {
+                  "key": "HYTALE_CURSEFORGE_API_KEY",
+                  "defaultValue": null,
+                  "label": "CurseForge API Key",
+                  "placeholder": "$2a$10$aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "description": "Required when CurseForge mods are configured. Generate one at console.curseforge.com.",
+                  "kind": "PASSWORD",
+                  "required": false
+                },
+                {
+                  "key": "HYTALE_CURSEFORGE_AUTO_UPDATE",
+                  "defaultValue": true,
+                  "label": "Auto-Update Mods",
+                  "description": "Checks for mod updates on every startup and downloads only when needed. If disabled, keeps the already installed version.",
+                  "kind": "BOOLEAN"
+                },
+                {
+                  "key": "HYTALE_CURSEFORGE_RELEASE_CHANNEL",
+                  "defaultValue": "release",
+                  "label": "Release Channel",
+                  "description": "The CurseForge release channel to install mod files from.",
+                  "kind": "SELECT",
+                  "options": [
+                    {
+                      "value": "release",
+                      "label": "Release"
+                    },
+                    {
+                      "value": "beta",
+                      "label": "Beta"
+                    },
+                    {
+                      "value": "alpha",
+                      "label": "Alpha"
+                    },
+                    {
+                      "value": "any",
+                      "label": "Any"
+                    }
+                  ]
+                },
+                {
+                  "key": "HYTALE_CURSEFORGE_GAME_VERSION_FILTER",
+                  "defaultValue": null,
+                  "label": "Game Version Filter",
+                  "description": "Filters CurseForge files by game version. Leave empty to accept all versions.",
+                  "kind": "TEXT",
+                  "required": false
+                },
+                {
+                  "key": "HYTALE_CURSEFORGE_CHECK_INTERVAL_SECONDS",
+                  "defaultValue": 0,
+                  "label": "Update Check Interval (seconds)",
+                  "description": "If greater than 0, skips remote update checks when the last check was recent. Reduces API usage on frequent restarts.",
+                  "kind": "NUMBER"
+                },
+                {
+                  "key": "HYTALE_CURSEFORGE_PRUNE",
+                  "defaultValue": false,
+                  "label": "Prune Removed Mods",
+                  "description": "Removes previously installed CurseForge mods that are no longer listed above.",
+                  "kind": "BOOLEAN"
+                },
+                {
+                  "key": "HYTALE_CURSEFORGE_FAIL_ON_ERROR",
+                  "defaultValue": false,
+                  "label": "Fail Startup on Mod Error",
+                  "description": "Fails container startup when any configured mod cannot be resolved or installed.",
+                  "kind": "BOOLEAN"
+                },
+                {
+                  "key": "HYTALE_CURSEFORGE_LOCK",
+                  "defaultValue": true,
+                  "label": "Enable Install Lock",
+                  "description": "Prevents concurrent CurseForge mod installations into the same data volume. Only disable for advanced use cases.",
+                  "kind": "BOOLEAN"
+                },
+                {
+                  "key": "HYTALE_CURSEFORGE_DEBUG",
+                  "defaultValue": false,
+                  "label": "Debug Logging",
+                  "description": "Prints additional diagnostics on CurseForge API and download failures. The API key is never printed.",
+                  "kind": "BOOLEAN"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "backups",
+        "label": "Backups",
+        "description": "The Hytale dedicated server's internal backup mechanism. Backup outputs should be treated as opaque artifacts.",
+        "children": [
+          {
+            "key": "HYTALE_ENABLE_BACKUP",
+            "defaultValue": false,
+            "label": "Enable Backups",
+            "description": "Enables the server's internal backup mechanism.",
+            "kind": "BOOLEAN",
+            "expand": {
+              "when": {
+                "equals": true
+              },
+              "children": [
+                {
+                  "key": "HYTALE_BACKUP_DIR",
+                  "defaultValue": "/backups",
+                  "label": "Backup Directory",
+                  "placeholder": "/backups",
+                  "description": "Directory backups are written to. It is recommended to keep this on a separate volume from /data.",
+                  "kind": "TEXT",
+                  "required": false
+                },
+                {
+                  "key": "HYTALE_BACKUP_FREQUENCY_MINUTES",
+                  "defaultValue": 30,
+                  "label": "Backup Frequency (minutes)",
+                  "description": "How often, in minutes, the server creates a backup.",
+                  "kind": "NUMBER"
+                },
+                {
+                  "key": "HYTALE_BACKUP_MAX_COUNT",
+                  "defaultValue": 5,
+                  "label": "Max Backup Count",
+                  "description": "Maximum number of backups to keep before older ones are pruned.",
+                  "kind": "NUMBER"
+                },
+                {
+                  "key": "HYTALE_BACKUP_ARCHIVE_MAX_COUNT",
+                  "defaultValue": null,
+                  "label": "Max Backup Archive Count",
+                  "description": "Advanced: maximum number of backup archives to keep, if different from the max backup count.",
+                  "kind": "NUMBER",
+                  "required": false
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "authentication",
+        "label": "Authentication",
+        "description": "Server authentication is required after startup before players can connect. By default this is done interactively via the console (/auth login device). These settings are for advanced, non-interactive fleet setups.",
+        "children": [
+          {
+            "key": "HYTALE_SESSION_TOKEN_BROKER_ENABLED",
+            "defaultValue": false,
+            "label": "Enable Session Token Broker",
+            "description": "Fetches server session/identity tokens from a Hytale Session Token Broker at startup, skipping the interactive /auth flow. Intended for providers and fleets running their own broker.",
+            "kind": "BOOLEAN",
+            "expand": {
+              "when": {
+                "equals": true
+              },
+              "children": [
+                {
+                  "key": "HYTALE_SESSION_TOKEN_BROKER_URL",
+                  "defaultValue": null,
+                  "label": "Broker URL",
+                  "placeholder": "http://broker:8080",
+                  "description": "Base URL of the Session Token Broker.",
+                  "kind": "TEXT",
+                  "required": true
+                },
+                {
+                  "key": "HYTALE_SESSION_TOKEN_BROKER_BEARER_TOKEN",
+                  "defaultValue": null,
+                  "label": "Broker Bearer Token",
+                  "description": "Optional HTTP bearer token used to authenticate against the broker API.",
+                  "kind": "PASSWORD",
+                  "required": false
+                },
+                {
+                  "key": "HYTALE_SESSION_TOKEN_BROKER_ACCOUNT",
+                  "defaultValue": null,
+                  "label": "Broker Account",
+                  "description": "Optional broker account name used for minting tokens.",
+                  "kind": "TEXT",
+                  "required": false
+                },
+                {
+                  "key": "HYTALE_SESSION_TOKEN_BROKER_TIMEOUT_SECONDS",
+                  "defaultValue": 10,
+                  "label": "Broker Timeout (seconds)",
+                  "description": "Request timeout for the broker HTTP call.",
+                  "kind": "NUMBER"
+                },
+                {
+                  "key": "HYTALE_SESSION_TOKEN_BROKER_FAIL_ON_ERROR",
+                  "defaultValue": true,
+                  "label": "Fail Startup on Broker Error",
+                  "description": "Fails container startup when the broker request fails. If disabled, the server continues without broker tokens.",
+                  "kind": "BOOLEAN"
+                },
+                {
+                  "key": "HYTALE_SESSION_TOKEN_BROKER_MIN_RETRY_INTERVAL_SECONDS",
+                  "defaultValue": null,
+                  "label": "Broker Min Retry Interval (seconds)",
+                  "description": "Minimum time between successful broker token fetches, to reduce token minting during crash/restart loops.",
+                  "kind": "NUMBER",
+                  "required": false
+                }
+              ]
+            }
+          },
+          {
+            "key": "HYTALE_SERVER_SESSION_TOKEN",
+            "defaultValue": null,
+            "label": "Manual Session Token",
+            "description": "Advanced: manually supplied session token, used instead of the interactive /auth flow or the Session Token Broker.",
+            "kind": "PASSWORD",
+            "required": false
+          },
+          {
+            "key": "HYTALE_SERVER_IDENTITY_TOKEN",
+            "defaultValue": null,
+            "label": "Manual Identity Token",
+            "description": "Advanced: manually supplied identity token, used instead of the interactive /auth flow or the Session Token Broker.",
+            "kind": "PASSWORD",
+            "required": false
+          }
+        ]
+      },
+      {
+        "id": "performance",
+        "label": "Performance (JVM)",
+        "description": "The Hytale server requires Java 25 (this image ships Eclipse Temurin 25). Tune JVM heap and AOT cache behavior here.",
+        "children": [
+          {
+            "key": "JVM_XMS",
+            "defaultValue": null,
+            "label": "JVM Initial Heap (Xms)",
+            "placeholder": "2G",
+            "description": "Initial JVM heap size, e.g. 2G. Leave empty to let the JVM pick a default based on available memory.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "JVM_XMX",
+            "defaultValue": "4G",
+            "label": "JVM Max Heap (Xmx)",
+            "placeholder": "4G",
+            "description": "Maximum JVM heap size, e.g. 4G. Setting an explicit value is recommended for predictable production operation.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "JVM_EXTRA_ARGS",
+            "defaultValue": null,
+            "label": "Extra JVM Arguments",
+            "placeholder": "--enable-native-access=ALL-UNNAMED",
+            "description": "Extra JVM arguments appended to the java command.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "ENABLE_AOT",
+            "defaultValue": "auto",
+            "label": "AOT Cache",
+            "description": "Controls use of the Java AOT cache for faster startup. \"auto\" enables it only when a compatible cache file exists.",
+            "kind": "SELECT",
+            "options": [
+              {
+                "value": "auto",
+                "label": "Auto"
+              },
+              {
+                "value": "true",
+                "label": "Required"
+              },
+              {
+                "value": "false",
+                "label": "Disabled"
+              },
+              {
+                "value": "generate",
+                "label": "Generate and Exit"
+              }
+            ]
+          },
+          {
+            "key": "EXTRA_SERVER_ARGS",
+            "defaultValue": null,
+            "label": "Extra Server Arguments",
+            "description": "Extra Hytale server arguments appended at the end of the command.",
+            "kind": "TEXT",
+            "required": false
+          }
+        ]
+      },
+      {
+        "id": "advanced",
+        "label": "Advanced",
+        "description": "Advanced and diagnostic settings for the Hytale server.",
+        "children": [
+          {
+            "key": "HYTALE_MACHINE_ID",
+            "defaultValue": null,
+            "label": "Machine ID",
+            "placeholder": "0123456789abcdef0123456789abcdef",
+            "description": "32-character hex string used as the container's machine ID (used to encrypt stored auth credentials). Auto-generated and persisted if not set.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_DISABLE_SENTRY",
+            "defaultValue": false,
+            "label": "Disable Sentry",
+            "description": "Disables error reporting to the Hytale team. Recommended during active plugin development.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_ACCEPT_EARLY_PLUGINS",
+            "defaultValue": false,
+            "label": "Accept Early Plugins",
+            "description": "Acknowledges that loading early plugins is unsupported and may cause stability issues.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_EARLY_PLUGINS_PATH",
+            "defaultValue": null,
+            "label": "Early Plugins Path",
+            "description": "Path to early plugins to load.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_MODS_PATH",
+            "defaultValue": null,
+            "label": "Mods Path Override",
+            "description": "Overrides the mods directory passed to the server. Leave empty to use the default (or the CurseForge-managed directory when mods are configured).",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_OWNER_NAME",
+            "defaultValue": null,
+            "label": "Owner Name",
+            "description": "Sets the server owner name.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_OWNER_UUID",
+            "defaultValue": null,
+            "label": "Owner UUID",
+            "description": "Sets the server owner UUID.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_UNIVERSE_PATH",
+            "defaultValue": null,
+            "label": "Universe Path Override",
+            "description": "Overrides the universe (world/player save data) directory passed to the server.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_WORLD_GEN_PATH",
+            "defaultValue": null,
+            "label": "World Gen Path",
+            "description": "Path to custom world generation data.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_PREFAB_CACHE_PATH",
+            "defaultValue": null,
+            "label": "Prefab Cache Path",
+            "description": "Path to the prefab cache.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_BOOT_COMMAND",
+            "defaultValue": null,
+            "label": "Boot Command",
+            "description": "A command executed on server boot.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_LOG",
+            "defaultValue": null,
+            "label": "Log Level/Target",
+            "description": "Advanced logging configuration passed to the server.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_DISABLE_ASSET_COMPARE",
+            "defaultValue": false,
+            "label": "Disable Asset Compare",
+            "description": "Skips comparing local assets against expected checksums on startup.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_DISABLE_CPB_BUILD",
+            "defaultValue": false,
+            "label": "Disable CPB Build",
+            "description": "Disables building the compiled prefab bundle on startup.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_DISABLE_FILE_WATCHER",
+            "defaultValue": false,
+            "label": "Disable File Watcher",
+            "description": "Disables the server's internal file watcher.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_EVENT_DEBUG",
+            "defaultValue": false,
+            "label": "Event Debug Logging",
+            "description": "Enables verbose event debug logging.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_VALIDATE_ASSETS",
+            "defaultValue": false,
+            "label": "Validate Assets",
+            "description": "Validates assets on startup.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_VALIDATE_PREFABS",
+            "defaultValue": null,
+            "label": "Validate Prefabs",
+            "description": "Set to \"true\" to validate prefabs on startup, or provide a specific value to pass through.",
+            "kind": "TEXT",
+            "required": false
+          },
+          {
+            "key": "HYTALE_VALIDATE_WORLD_GEN",
+            "defaultValue": false,
+            "label": "Validate World Gen",
+            "description": "Validates world generation on startup.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_SHUTDOWN_AFTER_VALIDATE",
+            "defaultValue": false,
+            "label": "Shutdown After Validate",
+            "description": "Shuts the server down automatically after any enabled validation steps complete.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HYTALE_CFG_INTERPOLATION",
+            "defaultValue": true,
+            "label": "Enable Config Interpolation",
+            "description": "Replaces ${CFG_*} / $CFG_* placeholders in JSON config files at startup using CFG_ environment variables.",
+            "kind": "BOOLEAN",
+            "expand": {
+              "when": {
+                "equals": true
+              },
+              "children": [
+                {
+                  "key": "HYTALE_CFG_INTERPOLATION_MODE",
+                  "defaultValue": "server-only",
+                  "label": "Interpolation Scope",
+                  "description": "server-only interpolates only config.json. all also interpolates mod config JSON files. explicit interpolates config.json plus the paths you list separately.",
+                  "kind": "SELECT",
+                  "options": [
+                    {
+                      "value": "server-only",
+                      "label": "Server config only"
+                    },
+                    {
+                      "value": "all",
+                      "label": "All config + mod JSON files"
+                    },
+                    {
+                      "value": "explicit",
+                      "label": "Explicit paths"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "docker": {
+    "image": "hybrowse/hytale-server:latest",
+    "environment": []
+  },
+  "backups": {
+    "enabled": true,
+    "targets": [
+      {
+        "id": "data",
+        "label": "Server data",
+        "containerPath": "/data"
+      },
+      {
+        "id": "hytale-backups",
+        "label": "Hytale internal backups",
+        "containerPath": "/backups"
+      }
+    ]
+  }
+}

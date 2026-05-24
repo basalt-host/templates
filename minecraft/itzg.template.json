@@ -1,0 +1,1593 @@
+{
+  "id": "c0b5e759-0b8a-4b21-906a-82a14b59f180",
+  "game": "Minecraft",
+  "name": "itzg/docker-minecraft-server",
+  "description": "Official Basalt Minecraft server template.",
+  "version": "2026.7.15",
+  "author": "Basalt Team",
+  "logo": "https://raw.githubusercontent.com/basalt-host/templates/refs/heads/main/assets/minecraft.png",
+  "settings": {
+    "versions": [
+      "LATEST",
+      "1.21.3",
+      "1.21.1",
+      "1.20.4",
+      "1.19.4"
+    ],
+    "fileBrowser": {
+      "rootFolder": "/data",
+      "readOnlyPaths": [],
+      "hiddenPaths": []
+    },
+    "categories": [
+      {
+        "id": "general",
+        "label": "General",
+        "description": "",
+        "children": [
+          {
+            "key": "TYPE",
+            "defaultValue": "vanilla",
+            "label": "Server Type",
+            "description": "The type of Minecraft server to run.",
+            "kind": "COMBOBOX",
+            "required": false,
+            "options": [
+              {
+                "value": "vanilla",
+                "label": "Vanilla"
+              },
+              {
+                "value": "bukkit",
+                "label": "Bukkit"
+              },
+              {
+                "value": "paper",
+                "label": "Paper",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "PAPER_CHANNEL",
+                      "defaultValue": "stable",
+                      "label": "Experimental Paper Version",
+                      "description": "Paper provides experimental versions for the latest Minecraft version.",
+                      "kind": "SELECT",
+                      "options": [
+                        {
+                          "value": "DEFAULT",
+                          "label": "Default"
+                        },
+                        {
+                          "value": "EXPERIMENTAL",
+                          "label": "Experimental"
+                        },
+                        {
+                          "value": "ALPHA",
+                          "label": "Alpha"
+                        }
+                      ],
+                      "required": false
+                    },
+                    {
+                      "key": "PAPER_BUILD",
+                      "defaultValue": null,
+                      "label": "Paper Build Version",
+                      "description": "Leave empty for the latest build version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "fabric",
+                "label": "Fabric",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "FABRIC_LAUNCHER_VERSION",
+                      "defaultValue": null,
+                      "label": "Fabric Launcher Version",
+                      "description": "Leave empty for the latest version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    },
+                    {
+                      "key": "FABRIC_LOADER_VERSION",
+                      "defaultValue": null,
+                      "label": "Fabric Loader Version",
+                      "description": "Leave empty for the latest version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "quilt",
+                "label": "Quilt",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "QUILT_INSTALLER_VERSION",
+                      "defaultValue": null,
+                      "label": "Quilt Installer Version",
+                      "description": "Leave empty for the latest version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    },
+                    {
+                      "key": "QUILT_LOADER_VERSION",
+                      "defaultValue": null,
+                      "label": "Quilt Loader Version",
+                      "description": "Leave empty for the latest version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "forge",
+                "label": "Forge",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "FORGE_VERSION",
+                      "defaultValue": null,
+                      "label": "Forge Version",
+                      "description": "Leave empty for the recommended version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "neoforge",
+                "label": "NeoForge",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "NEOFORGE_VERSION",
+                      "defaultValue": null,
+                      "label": "NeoForge Version",
+                      "description": "Leave empty for the recommended version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "modrinth",
+                "label": "Modrinth",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "MODRINTH_MODPACK",
+                      "defaultValue": null,
+                      "label": "Modrinth Modpack",
+                      "placeholder": "https://modrinth.com/modpack/cobblemon-fabric",
+                      "description": "Specify either the Modrinth project URL, the project slug or the URL or path inside the container to an .mrpack file.",
+                      "kind": "TEXT",
+                      "required": true
+                    },
+                    {
+                      "key": "MODRINTH_VERSION",
+                      "defaultValue": null,
+                      "label": "Modrinth Modpack Version",
+                      "placeholder": "1.5.2",
+                      "description": "You can optionally specify a specific modpack version number or ID.",
+                      "kind": "TEXT",
+                      "required": false
+                    },
+                    {
+                      "enable": {
+                        "isEmpty": "$MODRINTH_VERSION"
+                      },
+                      "key": "MODRINTH_DEFAULT_VERSION_TYPE",
+                      "defaultValue": null,
+                      "label": "Modrinth Modpack Version Type",
+                      "description": "The latest release or beta version, respectively, of the Modrinth modpack is selected when the Minecraft Version is “LATEST” or “SNAPSHOT”. This can be overridden.",
+                      "kind": "SELECT",
+                      "required": false,
+                      "options": [
+                        {
+                          "value": "release",
+                          "label": "Stable"
+                        },
+                        {
+                          "value": "beta",
+                          "label": "Beta and Stable versions"
+                        },
+                        {
+                          "value": "alpha",
+                          "label": "Alpha, Beta and Stable versions"
+                        }
+                      ]
+                    },
+                    {
+                      "enable": {
+                        "isEmpty": "$MODRINTH_VERSION"
+                      },
+                      "key": "MODRINTH_LOADER",
+                      "defaultValue": null,
+                      "label": "Modrinth Modpack Loader",
+                      "description": "If the modpack supports multiple loaders, you can specify the loader to use.",
+                      "kind": "SELECT",
+                      "required": false,
+                      "options": [
+                        {
+                          "value": "fabric",
+                          "label": "Fabric"
+                        },
+                        {
+                          "value": "quilt",
+                          "label": "Quilt"
+                        },
+                        {
+                          "value": "forge",
+                          "label": "Forge"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "AUTO_CURSEFORGE",
+                "label": "CurseForge (auto)",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "CF_PAGE_URL",
+                      "defaultValue": null,
+                      "label": "CurseForge Modpack URL",
+                      "placeholder": "https://www.curseforge.com/minecraft/modpacks/all-the-mods-8/files/4248390",
+                      "description": "Specify the URL of the CurseForge project page. If you want to use a specific version, specify the URL to the corresponding file page of the project instead.",
+                      "kind": "TEXT",
+                      "required": true
+                    },
+                    {
+                      "key": "CF_API_KEY",
+                      "defaultValue": null,
+                      "label": "CurseForge API Key",
+                      "placeholder": "$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa",
+                      "description": "An API key required to access the CurseForge API. The API key can be generated in the CurseForge developer console.",
+                      "kind": "TEXT",
+                      "required": true
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "CURSEFORGE",
+                "label": "CurseForge (manual)",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "CF_SERVER_MOD",
+                      "defaultValue": null,
+                      "label": "CurseForge/FTB Server Modpack",
+                      "placeholder": "SkyFactory_4_Server_4.1.0.zip",
+                      "description": "Specify the server modpack ZIP filename, path in the container, or a direct download URL.",
+                      "kind": "TEXT",
+                      "required": true
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "FTBA",
+                "label": "Feed The Beast (FTB) (auto)",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "FTB_MODPACK_ID",
+                      "defaultValue": null,
+                      "label": "Feed The Beast Modpack",
+                      "placeholder": "https://www.feed-the-beast.com/modpacks/23-ftb-infinity-evolved-17",
+                      "description": "Specify the modpack ID or feed-the-beast.com modpack URL.",
+                      "kind": "TEXT",
+                      "required": true
+                    },
+                    {
+                      "key": "FTB_MODPACK_VERSION",
+                      "defaultValue": null,
+                      "label": "Feed The Beast Modpack Version ID",
+                      "placeholder": "99",
+                      "description": "You can optionally specify a specific modpack version ID (extracted from the version file URL).",
+                      "kind": "NUMBER",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "FTB",
+                "label": "Feed The Beast (FTB) (manual)",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "CF_SERVER_MOD",
+                      "defaultValue": null,
+                      "label": "Feed The Beast (FTB) (manual)",
+                      "placeholder": "SkyFactory_4_Server_4.1.0.zip",
+                      "description": "Specify the server modpack ZIP filename, path in the container, or a direct download URL.",
+                      "kind": "TEXT",
+                      "required": true
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "GTNH",
+                "label": "GregTech: New Horizons (GTNH)"
+              },
+              {
+                "value": "PURPUR",
+                "label": "Purpur",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "PURPUR_BUILD",
+                      "defaultValue": null,
+                      "label": "Purpur Build Version",
+                      "description": "Leave empty for the latest version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "PUFFERFISH",
+                "label": "Pufferfish",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "PUFFERFISH_BUILD",
+                      "defaultValue": null,
+                      "label": "Pufferfish Build Version",
+                      "description": "Leave empty for the latest version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "LEAF",
+                "label": "Leaf",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "LEAF_BUILD",
+                      "defaultValue": null,
+                      "label": "Leaf Build Version",
+                      "description": "Leave empty for the latest version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "FOLIA",
+                "label": "Folia",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "FOLIA_BUILD",
+                      "defaultValue": null,
+                      "label": "Folia Build Version",
+                      "description": "Leave empty for the latest version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "SPIGOT",
+                "label": "Spigot"
+              },
+              {
+                "value": "SPONGEVANILLA",
+                "label": "SpongeVanilla",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "SPONGEBRANCH",
+                      "defaultValue": null,
+                      "label": "SpongeVanilla Branch",
+                      "description": "Leave empty for the latest version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    },
+                    {
+                      "key": "SPONGEVERSION",
+                      "defaultValue": null,
+                      "label": "SpongeVanilla Version",
+                      "description": "Leave empty for the latest version for the selected branch.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "KETTING",
+                "label": "Ketting",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "FORGE_VERSION",
+                      "defaultValue": null,
+                      "label": "Forge Version",
+                      "description": "Leave empty for the recommended version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    },
+                    {
+                      "key": "KETTING_VERSION",
+                      "defaultValue": null,
+                      "label": "Ketting Version",
+                      "description": "Leave empty for the latest version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "MOHIST",
+                "label": "Mohist",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "MOHIST_BUILD",
+                      "defaultValue": null,
+                      "label": "Mohist Build Version",
+                      "description": "Leave empty for the latest build for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "YOUER",
+                "label": "Youer",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "YOUER_BUILD",
+                      "defaultValue": null,
+                      "label": "Youer Build Version",
+                      "description": "Leave empty for the latest build for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "BANNER",
+                "label": "Banner",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "BANNER_BUILD",
+                      "defaultValue": null,
+                      "label": "Banner Build Version",
+                      "description": "Leave empty for the latest build for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "CRUCIBLE",
+                "label": "Crucible",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "CRUCIBLE_BUILD",
+                      "defaultValue": null,
+                      "label": "Crucible Build Version",
+                      "description": "Leave empty for the latest build for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "KETTING",
+                "label": "Ketting",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "FORGE_VERSION",
+                      "defaultValue": null,
+                      "label": "Forge Version",
+                      "description": "Leave empty for the recommended version for the selected Minecraft version.",
+                      "kind": "TEXT",
+                      "required": false
+                    },
+                    {
+                      "key": "MAGMA_MAINTAINED_TAG",
+                      "defaultValue": null,
+                      "label": "Magma Maintained Tag",
+                      "description": "You can find the supported Forge version and the Magma Maintained Tag on the release page of the respective repository.",
+                      "kind": "TEXT",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "MAGMA",
+                "label": "Magma"
+              },
+              {
+                "value": "ARCLIGHT",
+                "label": "Arclight",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "ARCLIGHT_TYPE",
+                      "defaultValue": null,
+                      "label": "Arclight Mod Loader",
+                      "description": "Choose the mod loader you want to use for Arclight.",
+                      "kind": "SELECT",
+                      "required": false,
+                      "options": [
+                        {
+                          "value": "fabric",
+                          "label": "Fabric"
+                        },
+                        {
+                          "value": "quilt",
+                          "label": "Quilt"
+                        },
+                        {
+                          "value": "forge",
+                          "label": "Forge"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "CANYON",
+                "label": "Canyon",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "CANYON_BUILD",
+                      "defaultValue": null,
+                      "label": "Canyon Build Version",
+                      "description": "Leave empty for the latest build.",
+                      "kind": "STRING",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "LIMBO",
+                "label": "Limbo",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "LIMBO_BUILD",
+                      "defaultValue": null,
+                      "label": "Limbo Build Version",
+                      "description": "Leave empty for the latest stable build.",
+                      "kind": "STRING",
+                      "required": false
+                    }
+                  ]
+                }
+              },
+              {
+                "value": "NANOLIMBO",
+                "label": "NanoLimbo"
+              },
+              {
+                "value": "POSEIDON",
+                "label": "Poseidon"
+              },
+              {
+                "value": "CUSTOM",
+                "label": "Custom",
+                "expand": {
+                  "children": [
+                    {
+                      "key": "CUSTOM_SERVER",
+                      "defaultValue": null,
+                      "label": "Custom Server JAR",
+                      "placeholder": "minecraft_server.jar",
+                      "description": "Enter the URL or the file path to the JAR file of the custom server.",
+                      "kind": "STRING",
+                      "required": false
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "key": "EULA",
+            "defaultValue": false,
+            "label": "EULA",
+            "description": "Accept the EULA to use this server.",
+            "kind": "BOOLEAN",
+            "required": true
+          },
+          {
+            "key": "MAX_PLAYERS",
+            "defaultValue": 20,
+            "label": "Max Players",
+            "description": "The maximum number of players allowed on the server.",
+            "kind": "SLIDER"
+          },
+          {
+            "key": "MOTD",
+            "defaultValue": "Basalt Powered Minecraft Server",
+            "label": "MOTD",
+            "placeholder": "Basalt Powered Minecraft Server",
+            "description": "The message of the day displayed on the server list. You can use color codes (e.g. &a), formatting codes (e.g. &l) to customize the message, and \\n to add a new line.",
+            "kind": "TEXTAREA"
+          },
+          {
+            "key": "ICON",
+            "defaultValue": null,
+            "label": "Icon",
+            "placeholder": "https://example.com",
+            "description": "A URL or file path to a 64x64 PNG image file that will be displayed in the server list.",
+            "kind": "TEXT"
+          },
+          {
+            "key": "ONLINE_MODE",
+            "defaultValue": true,
+            "label": "Online Mode",
+            "description": "Whether the server should require online mode (require Mojang account verification) or not.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "USE_AIKAR_FLAGS",
+            "defaultValue": false,
+            "label": "Use Aikar Flags",
+            "description": "A list of JVM flags to optimize the server performance. These flags are beneficial for most servers.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "USE_MEOWICE_FLAGS",
+            "defaultValue": false,
+            "label": "Use Meowice Flags",
+            "description": "A list of JVM flags based on Aikar Flags to optimize the server performance, but with improvements for Java 17 and newer.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "TZ",
+            "defaultValue": null,
+            "label": "Time Zone",
+            "placeholder": "UTC",
+            "description": "The time zone to use for the server.",
+            "kind": "TIMEZONE"
+          }
+        ]
+      },
+      {
+        "id": "world",
+        "label": "World",
+        "description": "",
+        "children": [
+          {
+            "key": "DIFFICULTY",
+            "defaultValue": 0,
+            "label": "Difficulty",
+            "description": "The difficulty level of the world.",
+            "kind": "SELECT",
+            "options": [
+              {
+                "value": 0,
+                "label": "Peaceful"
+              },
+              {
+                "value": 1,
+                "label": "Easy"
+              },
+              {
+                "value": 2,
+                "label": "Normal"
+              },
+              {
+                "value": 3,
+                "label": "Hard"
+              }
+            ]
+          },
+          {
+            "key": "HARDCORE",
+            "defaultValue": false,
+            "label": "Enable Hardcore Mode",
+            "description": "Enabling hardcore mode the difficulty is set to hard and the player will be put into spectator mode upon death.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "PVP",
+            "defaultValue": true,
+            "label": "Enable PvP",
+            "description": "Enabling PvP allows players to fight each other.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "MODE",
+            "defaultValue": "0",
+            "label": "Game Mode",
+            "description": "The game mode of the world.",
+            "kind": "SELECT",
+            "options": [
+              {
+                "value": 0,
+                "label": "Survival"
+              },
+              {
+                "value": 1,
+                "label": "Creative"
+              },
+              {
+                "value": 2,
+                "label": "Adventure"
+              },
+              {
+                "value": 3,
+                "label": "Spectator"
+              }
+            ]
+          },
+          {
+            "key": "FORCE_GAMEMODE",
+            "defaultValue": false,
+            "label": "Force Game Mode on Join",
+            "description": "Forces the game mode to be set to the selected mode when the player joins.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "ENABLE_COMMAND_BLOCK",
+            "defaultValue": false,
+            "label": "Enable Command Blocks",
+            "description": "Enables the command block to be used in the world.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "ALLOW_NETHER",
+            "defaultValue": false,
+            "label": "Enable Nether Dimension",
+            "description": "Allows the Nether to be accessed in the world.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "SPAWN_ANIMALS",
+            "defaultValue": false,
+            "label": "Allow Animals to Spawn",
+            "description": "Allows animals to spawn in the world.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "SPAWN_MONSTERS",
+            "defaultValue": false,
+            "label": "Allow Monsters to Spawn",
+            "description": "Allows monsters to spawn in the world.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "SPAWN_NPCS",
+            "defaultValue": false,
+            "label": "Allow Villagers to Spawn",
+            "description": "Allows Villagers to spawn in the world.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "ENTITY_BROADCAST_RANGE_PERCENTAGE",
+            "defaultValue": 100,
+            "label": "Entity Broadcast Range Percentage",
+            "placeholder": "100",
+            "description": "The percentage of the normal range that entities will be visible to players. Higher values means they will be rendered from farther away, potentially causing more lag.",
+            "kind": "SLIDER",
+            "min": 10,
+            "max": 1000
+          },
+          {
+            "key": "SIMULATION_DISTANCE",
+            "defaultValue": 100,
+            "label": "Simulation Distance",
+            "placeholder": "100",
+            "description": "The maximum distance from players that living entities may be located in order to be updated by the server, measured in chunks in each direction of the player (radius).",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "VIEW_DISTANCE",
+            "defaultValue": 10,
+            "label": "View Distance",
+            "placeholder": "10",
+            "description": "The amount of world data the server sends the player, measured in chunks in each direction of the player (radius).",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "SEED",
+            "defaultValue": null,
+            "label": "World Generator Seed",
+            "description": "Leave empty for a random seed.",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "LEVEL",
+            "defaultValue": "world",
+            "label": "World Name",
+            "placeholder": "world",
+            "description": "The name of the world to generate.",
+            "kind": "TEXT"
+          },
+          {
+            "key": "LEVEL_TYPE",
+            "defaultValue": "normal",
+            "label": "World Type",
+            "description": "The type of world to generate.",
+            "kind": "SELECT",
+            "options": [
+              {
+                "value": "normal",
+                "label": "Normal"
+              },
+              {
+                "value": "flat",
+                "label": "Flat"
+              },
+              {
+                "value": "large_biomes",
+                "label": "Large Biomes"
+              },
+              {
+                "value": "amplified",
+                "label": "Amplified"
+              },
+              {
+                "value": "single_biome_surface",
+                "label": "Single Biome"
+              }
+            ]
+          },
+          {
+            "key": "GENERATOR_SETTINGS",
+            "defaultValue": null,
+            "label": "Generator Settings",
+            "placeholder": "{\n    \"layers\": [\n        {\n            \"block\": \"minecraft:bedrock\",\n            \"height\": 1\n        }\n    ],\n    \"biome\": \"minecraft:desert\"\n}",
+            "description": "Additional World Generator Settings",
+            "kind": "TEXTAREA"
+          },
+          {
+            "key": "GENERATE_STRUCTURES",
+            "defaultValue": true,
+            "label": "Generate Structures",
+            "description": "Whether the server should generate structures like villages and strongholds.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "SPAWN_PROTECTION",
+            "defaultValue": 16,
+            "label": "Spawn Protection",
+            "placeholder": "16",
+            "description": "The radius of the spawn protection area.",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "MAX_WORLD_SIZE",
+            "defaultValue": 29999984,
+            "label": "Max World Size",
+            "placeholder": "29999984",
+            "description": "The maximum size of the world.",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "MAX_TICK_TIME",
+            "defaultValue": 60000,
+            "label": "Max Tick Time",
+            "placeholder": "60000",
+            "description": "The maximum number of milliseconds a single tick may take before the server watchdog stops the server. -1 disables the watchdog.",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "MAX_CHAINED_NEIGHBOUR_UPDATES",
+            "defaultValue": 100000,
+            "label": "Max Chained Neighbour Updates",
+            "placeholder": "100000",
+            "description": "The maximum number of chained neighbour updates.",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "REGION_FILE_COMPRESSION",
+            "defaultValue": "deflate",
+            "label": "Region File Compression Algorithm",
+            "description": "The compression level for region files.",
+            "kind": "SELECT",
+            "options": [
+              {
+                "value": "deflate",
+                "label": "Deflate"
+              },
+              {
+                "value": "lz4",
+                "label": "LZ4"
+              },
+              {
+                "value": "none",
+                "label": "None"
+              }
+            ]
+          },
+          {
+            "key": "SYNC_CHUNK_WRITES",
+            "defaultValue": true,
+            "label": "Enable Synchronous Chunk Writes",
+            "description": "Whether to enable synchronous chunk writes.",
+            "kind": "BOOLEAN"
+          }
+        ]
+      },
+      {
+        "id": "players",
+        "label": "Players",
+        "description": "",
+        "children": [
+          {
+            "key": "OPS",
+            "defaultValue": null,
+            "label": "Operators",
+            "placeholder": "Notch",
+            "description": "A list of UUIDs and/or names of players who have the operator role on the server.",
+            "kind": "LIST"
+          },
+          {
+            "key": "ENABLE_WHITELIST",
+            "defaultValue": false,
+            "label": "Enable Whitelist",
+            "description": "The whitelist ensures that only players who are on the list are allowed to enter the server.",
+            "kind": "BOOLEAN",
+            "expand": {
+              "when": {
+                "equals": true
+              },
+              "children": [
+                {
+                  "key": "WHITELIST",
+                  "defaultValue": null,
+                  "label": "Whitelist",
+                  "placeholder": "Notch",
+                  "description": "A list of UUIDs and/or names of players who are whitelisted on the server.",
+                  "kind": "LIST"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "content",
+        "label": "Content",
+        "description": "If you want to use a modpack from Modrinth, CurseForge or Feed The Beast, select the appropriate option in the \"General\" category under \"Server Type\".",
+        "children": [
+          {
+            "key": "CURSEFORGE_FILES",
+            "defaultValue": null,
+            "label": "CurseForge Files",
+            "placeholder": "https://www.curseforge.com/minecraft/mc-mods/jei",
+            "description": "A list of CurseForge files to be installed on the server.",
+            "kind": "LIST"
+          },
+          {
+            "key": "CF_API_KEY",
+            "defaultValue": null,
+            "label": "CurseForge API Key",
+            "placeholder": "$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "description": "An API key required to access the CurseForge API. The API key can be generated in the CurseForge developer console.",
+            "kind": "TEXT"
+          },
+          {
+            "key": "MODRINTH_PROJECTS",
+            "label": "Modrinth Projects",
+            "description": "A list of Modrinth projects to be installed on the server.",
+            "kind": "LIST",
+            "defaultValue": [],
+            "placeholder": "https://modrinth.com/mod/fabric-api",
+            "expand": {
+              "when": {
+                "nonEmpty": true
+              },
+              "children": [
+                {
+                  "key": "MODRINTH_DOWNLOAD_DEPENDENCIES",
+                  "label": "Download Modrinth Dependencies",
+                  "description": "",
+                  "kind": "SELECT",
+                  "options": [
+                    {
+                      "value": "none",
+                      "label": "Do not download dependencies"
+                    },
+                    {
+                      "value": "optional",
+                      "label": "Download optional dependencies"
+                    },
+                    {
+                      "value": "required",
+                      "label": "Download required dependencies"
+                    }
+                  ],
+                  "defaultValue": "none"
+                },
+                {
+                  "key": "MODRINTH_ALLOWED_VERSION_TYPE",
+                  "label": "Allowed Modrinth Version Types for Determining New Versions",
+                  "description": "",
+                  "kind": "SELECT",
+                  "options": [
+                    {
+                      "value": "release",
+                      "label": "Stable versions"
+                    },
+                    {
+                      "value": "beta",
+                      "label": "Beta versions and stable versions"
+                    },
+                    {
+                      "value": "alpha",
+                      "label": "Alpha versions, beta versions, and stable versions"
+                    }
+                  ],
+                  "defaultValue": "release"
+                }
+              ]
+            }
+          },
+          {
+            "key": "PACKWIZ_URL",
+            "label": "PackWiz URL",
+            "description": "The URL of a modpack definition file in PackWiz file format to install a modpack on the server.",
+            "kind": "TEXT",
+            "placeholder": "https://example.com/modpack/pack.toml"
+          },
+          {
+            "key": "SPIGET_RESOURCES",
+            "label": "SpigotMC.org Resources",
+            "description": "A list of resources on SpigotMC.org to be installed on the server. Resource IDs or SpigotMC.org URLs can be specified.",
+            "kind": "LIST",
+            "placeholder": "https://www.spigotmc.org/resources/luckperms.201/"
+          },
+          {
+            "key": "MODS",
+            "label": "Mod URLs",
+            "description": "A list of URLs to the mod JAR files to be installed on the server.",
+            "kind": "LIST",
+            "placeholder": "https://example.com/mods/mod.jar"
+          },
+          {
+            "key": "PLUGINS",
+            "label": "Plugin URLs",
+            "description": "A list of URLs to the plugin JAR files to be installed on the server.",
+            "kind": "LIST",
+            "placeholder": "https://example.com/plugins/plugin.jar"
+          },
+          {
+            "key": "WORLD",
+            "label": "World URL",
+            "description": "Instead of using an existing world or generating a new world, you can also specify the URL of a compressed TAR file that contains a world.",
+            "kind": "TEXT",
+            "placeholder": "https://example.com/world.zip"
+          },
+          {
+            "key": "DATAPACKS",
+            "label": "Data Pack URLs",
+            "description": "A list of URLs to the data pack ZIP files to be installed on the main world.",
+            "kind": "LIST",
+            "placeholder": "https://example.com/datapack.zip"
+          },
+          {
+            "key": "VANILLATWEAKS_SHARECODE",
+            "label": "VanillaTweaks Share Code",
+            "description": "A list of VanillaTweaks share codes to be installed on the server. The share code is the part of the URL that follows the # symbol.",
+            "kind": "LIST",
+            "placeholder": "MGr52E"
+          },
+          {
+            "key": "VANILLATWEAKS_FILE",
+            "label": "VanillaTweaks File",
+            "description": "A list of paths in the container to VanillaTweaks pack files in JSON format to be installed on the server.",
+            "kind": "LIST",
+            "placeholder": "/config/vt-datapacks.json"
+          }
+        ]
+      },
+      {
+        "id": "resource-pack",
+        "label": "Resource Pack",
+        "description": "",
+        "children": [
+          {
+            "key": "RESOURCE_PACK",
+            "defaultValue": null,
+            "label": "Resource Pack URL",
+            "placeholder": "https://example.com/resource-pack.zip",
+            "description": "The URL to a ZIP archive containing the resource pack.",
+            "kind": "TEXT",
+            "expand": {
+              "when": {
+                "nonEmpty": true
+              },
+              "children": [
+                {
+                  "key": "RESOURCE_PACK_ID",
+                  "defaultValue": null,
+                  "label": "Resource Pack ID",
+                  "placeholder": "00000000-0000-0000-0000-000000000000",
+                  "description": "An optional UUID to identify the resource pack.",
+                  "kind": "TEXT"
+                },
+                {
+                  "key": "RESOURCE_PACK_SHA1",
+                  "defaultValue": null,
+                  "label": "Resource Pack SHA1",
+                  "description": "An optional SHA-1 digest of the resource pack, in lowercase and hexadecimal. It is recommended to provide this information as it is used to check the integrity of the resource pack.",
+                  "kind": "TEXT"
+                },
+                {
+                  "key": "RESOURCE_PACK_REQUIRED",
+                  "defaultValue": false,
+                  "label": "Require Resource Pack",
+                  "description": "When enabled, players must download the resource pack to play on the server.",
+                  "kind": "BOOLEAN",
+                  "expand": {
+                    "when": {
+                      "equals": true
+                    },
+                    "children": [
+                      {
+                        "key": "RESOURCE_PACK_PROMPT",
+                        "defaultValue": null,
+                        "label": "Resource Pack Prompt",
+                        "placeholder": "We use a custom resource pack. Please download it to play.",
+                        "description": "A custom message displayed to the player when prompted to download the resource pack. Can be left blank for a default message. Expects chat component syntax, may contain multiple lines.",
+                        "kind": "TEXTAREA"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "networking",
+        "label": "Networking",
+        "description": null,
+        "children": [
+          {
+            "key": "NETWORK_COMPRESSION_THRESHOLD",
+            "defaultValue": 256,
+            "label": "Network Compression Threshold",
+            "placeholder": "256",
+            "description": "The size of a packet in bytes before it is compressed. -1 disables compression.",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "PREVENT_PROXY_CONNECTIONS",
+            "defaultValue": false,
+            "label": "Prevent Proxy Connections",
+            "description": "Prevents players from connecting with an ISP/ASN other than the one they had when authenticating with Mojang.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "RATE_LIMIT",
+            "defaultValue": null,
+            "label": "Rate Limit",
+            "description": "Maximum packets per second a player can send before getting kicked. Set to 0 to disable.",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "USE_NATIVE_TRANSPORT",
+            "defaultValue": true,
+            "label": "Use Native Transport",
+            "description": "Enables optimized packet sending/receiving on Linux.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "ENABLE_STATUS",
+            "defaultValue": true,
+            "label": "Enable Status Protocol",
+            "description": "Enables the status protocol that is used to show server information in the server list.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "HIDE_ONLINE_PLAYERS",
+            "defaultValue": false,
+            "label": "Hide Player List in Status Responses",
+            "description": "Hides the player list in the server list.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "ENFORCE_SECURE_PROFILE",
+            "defaultValue": false,
+            "label": "Enforce Secure Profile",
+            "description": "Enforces that players can only join with a Mojang-signed public key. If this is disabled, all chat messages will be left unsigned and unable to be reported. Players will get warned about this when connecting to the server.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "STATUS_HEARTBEAT_INTERVAL",
+            "defaultValue": null,
+            "label": "Status Heartbeat Interval",
+            "description": "The interval in milliseconds for status heartbeat updates.",
+            "kind": "NUMBER"
+          }
+        ]
+      },
+      {
+        "id": "rcon",
+        "label": "RCON",
+        "description": null,
+        "children": [
+          {
+            "key": "RCON_CMDS_STARTUP",
+            "defaultValue": null,
+            "label": "Commands to execute after server startup",
+            "placeholder": "pregen start 200",
+            "description": null,
+            "kind": "LIST"
+          },
+          {
+            "key": "RCON_CMDS_ON_CONNECT",
+            "defaultValue": null,
+            "label": "Commands to execute after a player joins",
+            "placeholder": "team join New @a[team=]",
+            "description": null,
+            "kind": "LIST"
+          },
+          {
+            "key": "RCON_CMDS_ON_DISCONNECT",
+            "defaultValue": null,
+            "label": "Commands to execute after a player leaves",
+            "placeholder": "gamerule doFireTrick true",
+            "description": null,
+            "kind": "LIST"
+          },
+          {
+            "key": "RCON_CMDS_FIRST_CONNECT",
+            "defaultValue": null,
+            "label": "Commands to execute after the first player joins",
+            "placeholder": "pregen stop",
+            "description": "These commands are only executed if no players were online on the server before.",
+            "kind": "LIST"
+          },
+          {
+            "key": "RCON_CMDS_LAST_DISCONNECT",
+            "defaultValue": null,
+            "label": "Commands to execute after the last player leaves",
+            "placeholder": "pregen start 200",
+            "description": "These commands are only executed if no players are online on the server afterwards.",
+            "kind": "LIST"
+          }
+        ]
+      },
+      {
+        "id": "misc",
+        "label": "Miscellaneous",
+        "description": null,
+        "children": [
+          {
+            "key": "PAUSE_WHEN_EMPTY_SECONDS",
+            "defaultValue": 60,
+            "label": "Pause when empty",
+            "placeholder": "60",
+            "description": "The time in seconds before the server is paused when no players are online.",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "PLAYER_IDLE_TIMEOUT",
+            "label": "Player Idle Timeout",
+            "description": "The time in minutes before a player is kicked from the server for being idle.",
+            "kind": "NUMBER",
+            "defaultValue": 0,
+            "min": -2
+          },
+          {
+            "key": "PREVIEWS_CHAT",
+            "label": "Enable Chat Message Previews",
+            "description": "A server-controlled preview appears above the chat edit box, showing how the message will look when sent.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "BROADCAST_CONSOLE_TO_OPS",
+            "label": "Broadcast Output of Console Commands to Operators",
+            "description": "",
+            "kind": "BOOLEAN",
+            "defaultValue": true
+          },
+          {
+            "key": "BROADCAST_RCON_TO_OPS",
+            "label": "Broadcast Output of RCON Commands to Operators",
+            "description": "",
+            "kind": "BOOLEAN",
+            "defaultValue": true
+          },
+          {
+            "key": "BUG_REPORT_LINK",
+            "label": "Bug Report Link",
+            "description": "The URL that is opened when a player clicks the “Report a Bug” button in the pause menu.",
+            "kind": "TEXT",
+            "placeholder": "https://example.com/bug-report"
+          },
+          {
+            "key": "ALLOW_FLIGHT",
+            "label": "Allow Flight in Survival Mode",
+            "description": "",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "ACCEPTS_TRANSFERS",
+            "label": "Accept Transfers",
+            "description": "Allows the server to transfer clients to another server.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "ANNOUNCE_PLAYER_ACHIEVEMENTS",
+            "label": "Announce Player Achievements",
+            "description": "Broadcasts player advancements/achievements in chat.",
+            "kind": "BOOLEAN",
+            "defaultValue": true
+          },
+          {
+            "key": "SERVER_NAME",
+            "label": "Server Name",
+            "description": "An optional server name used by newer server features.",
+            "kind": "TEXT",
+            "placeholder": "My Awesome Server"
+          },
+          {
+            "key": "SNOOPER_ENABLED",
+            "label": "Enable Snooper",
+            "description": "Enables sending snooper telemetry data. Mostly relevant for older versions.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "MAX_BUILD_HEIGHT",
+            "label": "Max Build Height",
+            "description": "",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "MAX_COMMAND_CHAIN_LENGTH",
+            "label": "Max Command Chain Length",
+            "description": "",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "MAX_ENTITY_CRAMMING",
+            "label": "Max Entity Cramming",
+            "description": "",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "MAX_ENTITY_COLLISION_RADIUS",
+            "label": "Max Entity Collision Radius",
+            "description": "",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "MAX_FUNCTION_CHAIN_DEPTH",
+            "label": "Max Function Chain Depth",
+            "description": "",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "MAX_NEIGHBORS",
+            "label": "Max Neighbors",
+            "description": "",
+            "kind": "NUMBER"
+          },
+          {
+            "key": "OP_PERMISSION_LEVEL",
+            "label": "Permission Level of Operators",
+            "description": "",
+            "kind": "NUMBER",
+            "defaultValue": 4
+          },
+          {
+            "key": "FUNCTION_PERMISSION_LEVEL",
+            "label": "Permission Level of Functions in Command Blocks",
+            "description": "",
+            "kind": "NUMBER",
+            "defaultValue": 2
+          }
+        ]
+      },
+      {
+        "id": "advanced",
+        "label": "Advanced",
+        "description": "Advanced settings for the Minecraft server.",
+        "children": [
+          {
+            "key": "UID",
+            "label": "User ID",
+            "description": "The Linux user ID that the server process will run as.",
+            "kind": "NUMBER",
+            "defaultValue": 1000
+          },
+          {
+            "key": "GID",
+            "label": "Group ID",
+            "description": "The Linux group ID that the server process will run as.",
+            "kind": "NUMBER",
+            "defaultValue": 1000
+          },
+          {
+            "key": "PROXY",
+            "defaultValue": null,
+            "label": "HTTP/HTTPS Proxy",
+            "placeholder": "proxy:3128",
+            "description": "",
+            "kind": "TEXT"
+          },
+          {
+            "key": "JVM_OPTS",
+            "label": "General JVM Options",
+            "description": "",
+            "kind": "TEXT"
+          },
+          {
+            "key": "JVM_XX_OPTS",
+            "label": "JVM -XX Options",
+            "description": "",
+            "kind": "TEXT"
+          },
+          {
+            "key": "JVM_DD_OPTS",
+            "label": "JVM -D Options",
+            "description": "",
+            "kind": "TEXT"
+          },
+          {
+            "key": "EXTRA_ARGS",
+            "label": "Extra Arguments",
+            "description": "Arguments that are passed to the JAR file (after the -jar option).",
+            "kind": "TEXT"
+          },
+          {
+            "key": "ENABLE_JMX",
+            "label": "Enable JMX",
+            "description": "Enables JMX (Java Management Extensions) for monitoring and managing the server.",
+            "kind": "BOOLEAN",
+            "expand": {
+              "when": {
+                "equals": true
+              },
+              "children": [
+                {
+                  "key": "JMX_HOST",
+                  "label": "JMX Host",
+                  "description": "The IP address or hostname to bind the JMX service to. Add a port forwarding of port 7091 to access JMX from outside the container.",
+                  "kind": "TEXT"
+                }
+              ]
+            }
+          },
+          {
+            "key": "ENABLE_ROLLING_LOGS",
+            "label": "Enable Rolling Logs",
+            "description": "By default, the log file will grow indefinitely. Reconfigures the logger to use a rolling log files strategy.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "LOG_TIMESTAMP",
+            "label": "Log Timestamps",
+            "description": "Prepends timestamps to each log line before the Minecraft server is started.",
+            "kind": "BOOLEAN"
+          },
+          {
+            "key": "LOG_IPS",
+            "label": "Log Player IP Addresses",
+            "description": "Displays the IP addresses of players in the server console and log file.",
+            "kind": "BOOLEAN",
+            "defaultValue": true
+          },
+          {
+            "key": "MANAGEMENT_SERVER_ENABLED",
+            "label": "Enable Management Server",
+            "description": "Enables the built-in management server.",
+            "kind": "BOOLEAN",
+            "expand": {
+              "when": {
+                "equals": true
+              },
+              "children": [
+                {
+                  "key": "MANAGEMENT_SERVER_HOST",
+                  "label": "Management Server Host",
+                  "description": "The host interface to bind the management server to.",
+                  "kind": "TEXT"
+                },
+                {
+                  "key": "MANAGEMENT_SERVER_PORT",
+                  "label": "Management Server Port",
+                  "description": "The port used by the management server.",
+                  "kind": "NUMBER"
+                },
+                {
+                  "key": "MANAGEMENT_SERVER_ALLOWED_ORIGINS",
+                  "label": "Management Server Allowed Origins",
+                  "description": "Comma-separated allowed origins for management server requests.",
+                  "kind": "TEXT"
+                },
+                {
+                  "key": "MANAGEMENT_SERVER_SECRET",
+                  "label": "Management Server Secret",
+                  "description": "Shared secret required to access the management server.",
+                  "kind": "PASSWORD"
+                },
+                {
+                  "key": "MANAGEMENT_SERVER_TLS_ENABLED",
+                  "label": "Enable Management Server TLS",
+                  "description": "Enables TLS for the management server endpoint.",
+                  "kind": "BOOLEAN",
+                  "expand": {
+                    "when": {
+                      "equals": true
+                    },
+                    "children": [
+                      {
+                        "key": "MANAGEMENT_SERVER_TLS_KEYSTORE",
+                        "label": "Management Server TLS Keystore",
+                        "description": "Path to the keystore file used for management server TLS.",
+                        "kind": "TEXT"
+                      },
+                      {
+                        "key": "MANAGEMENT_SERVER_TLS_KEYSTORE_PASSWORD",
+                        "label": "Management Server TLS Keystore Password",
+                        "description": "Password for the management server TLS keystore.",
+                        "kind": "TEXT"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "playit": {
+      "enabled": true,
+      "port": 25565
+    }
+  },
+  "docker": {
+    "image": "itzg/minecraft-server:latest",
+    "environment": []
+  },
+  "backups": {
+    "enabled": true,
+    "targets": [
+      {
+        "id": "data",
+        "label": "Server data",
+        "containerPath": "/data"
+      }
+    ]
+  }
+}
