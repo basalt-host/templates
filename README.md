@@ -34,7 +34,7 @@ Every template must conform to [`template.schema.json`](template.schema.json). T
   "version": "2026.7.15",                          // must match \d+.\d+.\d+
   "author": "Basalt Team",
   "logo": "https://raw.githubusercontent.com/basalt-host/templates/refs/heads/main/assets/minecraft.png",
-  "settings": { /* versions, categories, fileBrowser, playit */ },
+  "settings": { /* versions, categories, fileBrowser */ },
   "docker":   { /* image, startupCommand, environment */ },
   "backups":  { /* enabled, targets */ }
 }
@@ -45,7 +45,6 @@ Key concepts:
 - **Categories and fields** (`settings.categories`): the settings form shown in the panel. Fields map to container environment variables by `key` and declare a `kind` (`TEXT`, `NUMBER`, `BOOLEAN`, `PASSWORD`, `SELECT`, `COMBOBOX`, `LIST`, `SLIDER`, `TEXTAREA`, `TIMEZONE`, and others).
 - **Conditional fields** (`expand` / `enable`): fields and select options can reveal nested children when a condition matches (`equals`, `notEquals`, `in`, `notIn`, `nonEmpty`, `isEmpty`). This keeps the form small while still exposing advanced options.
 - **File browser** (`settings.fileBrowser`): the container root folder shown to users, plus read-only and hidden paths.
-- **Playit** (`settings.playit`): default tunnel settings (protocol and port) for exposing the server through playit.gg.
 - **Docker** (`docker`): the image to run, an optional startup command with `{{ENV_KEY}}` placeholders, and default environment variables.
 - **Backups** (`backups.targets`): container paths that Basalt can archive, each with a stable `id` and a human-readable `label`.
 
